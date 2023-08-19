@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="auth-page-content">
+    <div class="decoration">
+      <div class="dots-line" *ngFor="let _ of counter(2)">
+        <div class="dot" *ngFor="let _ of counter(4)"></div>
+      </div>
+      <div class="decoration-text">
+        <h1 class="auth-header">Organize it all</h1>
+        <div class="dot blue"></div>
+      </div>
+      <div class="dots-line" *ngFor="let _ of counter(2)">
+        <div class="dot" *ngFor="let _ of counter(4)"></div>
+      </div>
+    </div>
+    <app-auth-form></app-auth-form>
+  </div>
+</div>
