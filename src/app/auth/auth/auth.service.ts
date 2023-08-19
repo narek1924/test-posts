@@ -118,7 +118,7 @@ export class AuthService {
             }
           );
       })
-      .catch((error) => {});
+      .catch(() => {});
   }
   login(email: string, password: string) {
     return this.http
