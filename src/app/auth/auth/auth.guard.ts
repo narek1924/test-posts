@@ -7,7 +7,6 @@ import {
   UrlTree,
 } from '@angular/router';
 import { AuthService } from './auth.service';
-
 export function authenticationGuard(): CanActivateFn {
   return () => {
     const oauthService: AuthService = inject(AuthService);

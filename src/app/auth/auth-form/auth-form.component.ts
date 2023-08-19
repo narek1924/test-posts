@@ -6,7 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription, take } from 'rxjs';
+import { take, Subscription } from 'rxjs';
 import { DataStorageService } from 'src/app/shared/data-storage-service/data-storage.service';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
