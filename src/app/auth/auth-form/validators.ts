@@ -19,7 +19,7 @@ export function emailValidator(
 export function nameValidator(
   control: AbstractControl
 ): ValidationErrors | null {
-  const loginPattern = /^[a-zA-Z]+$/;
+  const loginPattern = /^[a-zA-Zа-яА-Я]+$/;
 
   if (!control.value) {
     return { required: true, message: 'Обязательное поле' };
@@ -35,7 +35,7 @@ export function nameValidator(
   if (!loginPattern.test(control.value)) {
     return {
       pattern: true,
-      message: 'Поле "имя" должно только латинские буквы и числа',
+      message: 'Поле "имя" должно содержать только буквы',
     };
   }
 
