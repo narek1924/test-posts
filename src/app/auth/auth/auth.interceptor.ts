@@ -23,6 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (!user) {
           return next.handle(request);
         }
+
         const modifiedRequest = request.clone({
           params: new HttpParams().set('auth', user.token as string),
         });

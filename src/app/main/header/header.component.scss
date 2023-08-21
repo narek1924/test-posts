@@ -1,0 +1,57 @@
+header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  padding: 0 20px;
+  background-color: #1c6ae0;
+  z-index: 100;
+}
+.settings {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  &:hover {
+    .username {
+      color: #84aeee;
+    }
+    .icon {
+      color: #84aeee;
+    }
+    .icon-wrapper {
+      border-color: #84aeee;
+    }
+    .avatar-wrapper {
+      outline: 2px solid white;
+    }
+  }
+}
+.avatar-frame {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+}
+
+.icon {
+  transform: scale(1.3);
+  color: white;
+}
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+.username {
+  color: white;
+  font-size: 18px;
+}

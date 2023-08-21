@@ -1,1 +1,5 @@
-<app-auth></app-auth>
+<div class="loading" *ngIf="loading">
+  <app-fetch-loading></app-fetch-loading>
+</div>
+
+<router-outlet *ngIf="!loading"></router-outlet>

@@ -13,12 +13,7 @@
       [class]="imageUrl ? 'avatar-wrapper' : 'icon-wrapper'"
       (click)="fileInput.click()"
     >
-      <img
-        *ngIf="!imageUrl"
-        src="/assets/svg-icons/camera-icon.svg"
-        class="default"
-        alt="profile-setting-icon"
-      />
+      <mat-icon class="icon" *ngIf="!imageUrl">camera_enhance</mat-icon>
       <img
         *ngIf="imageUrl"
         class="avatar"
@@ -40,52 +35,51 @@
       </div>
     </div>
 
-    <div class="header"><h3>My profile</h3></div>
-    <div class="username" (click)="editUsername()">{{ username }}</div>
+    <div class="header"><h3>Мой профиль</h3></div>
+    <div class="username">{{ username }}</div>
     <div class="email">{{ "(" + userEmail + ")" }}</div>
     <div class="buttons">
       <hr class="separator" />
       <button class="options" (click)="onPasswordChange()">
-        Reset Password
+        Сбросить пароль
       </button>
       <hr class="separator" />
-      <button class="options" (click)="onDelete()">Delete Account</button>
+      <button class="options" (click)="onDelete()">Удалить аккаунт</button>
       <hr class="separator" />
-      <button class="options" (click)="logout()">Sign Out</button>
+      <button class="options" (click)="logout()">Выйти</button>
     </div>
   </div>
   <div class="content" *ngIf="deletePage" @nextStepAnimation>
     <div class="header">
-      <img
+      <!-- <img
         src="/assets/svg-icons/arrow-icon.svg"
         alt="back to first step button"
         class="back-icon"
         (click)="backToSettings('delete')"
-      />
-      <h3>Delete Account</h3>
+      /> -->
+      <mat-icon class="back-icon" (click)="backToSettings('delete')"
+        >keyboard_backspace</mat-icon
+      >
+      <h3>Удалить аккаунт</h3>
     </div>
     <div class="info">
       <p class="delete-alert">
-        This will permanently delete all of your tasks & history. You can’t Undo
-        this
+        После удаления аккаунта вы потеряете доступ к своим данным
       </p>
       <button class="button delete" (click)="deleteAccount()">
-        Delete Account
+        Удалить аккаунт
       </button>
     </div>
   </div>
   <div class="content" *ngIf="changePassword" @nextStepAnimation>
     <div class="header">
-      <img
-        src="/assets/svg-icons/arrow-icon.svg"
-        alt="back to first step button"
-        class="back-icon"
-        (click)="backToSettings('reset')"
-      />
-      <h3>Reset password</h3>
+      <mat-icon class="back-icon" (click)="backToSettings('reset')">
+        keyboard_backspace</mat-icon
+      >
+      <h3>Сбросить пароль</h3>
     </div>
     <div class="info">
-      <p>We will send instructions to this email address:</p>
+      <p>Инструкции по восстановлению пароля будут отправлены на эту почту:</p>
       <p style="font-weight: 600">{{ userEmail }}</p>
       <button *ngIf="!emailSent" class="button reset" (click)="resetPassword()">
         <p *ngIf="!sendingEmail">Reset Password</p>
@@ -94,8 +88,8 @@
         ></app-loading-spinner-small>
       </button>
       <p class="email-sent" *ngIf="emailSent">
-        Email sent, <br />
-        Please check your inbox.
+        Письмо отправлено, <br />
+        Пожалуйста, проверьте свою почту
       </p>
     </div>
   </div>

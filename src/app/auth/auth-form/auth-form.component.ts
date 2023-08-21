@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { take, Subscription } from 'rxjs';
 import { DataStorageService } from 'src/app/shared/data-storage-service/data-storage.service';
 import { AuthService } from '../auth/auth.service';
@@ -24,6 +25,7 @@ import { ConfirmDeleteComponent } from 'src/app/shared/UI/confirm-delete/confirm
   animations: [firstStepAnimation, nextStepAnimation, itemAnimation],
 })
 export class AuthFormComponent implements OnInit, AfterViewInit {
+  email!: string;
   showPassword = false;
   subscription!: Subscription;
   animationDisabled = true;
@@ -43,79 +45,61 @@ export class AuthFormComponent implements OnInit, AfterViewInit {
     private dataService: DataStorageService
   ) {}
   ngOnInit(): void {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, this.customEmailValidator]],
-      name: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    // this.registerForm = this.fb.group({
+    //   email: ['', [Validators.required, this.customEmailValidator]],
+    //   name: ['', [Validators.required]],
+    //   password: ['', [Validators.required, Validators.minLength(6)]],
+    //   confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+    // });
   }
   ngAfterViewInit(): void {
     this.animationDisabled = false;
   }
-  googleSignIn() {
-    this.authService.signInWithGoogle();
-  }
-  submitData() {
-    let name = this.registerForm.value.name;
-    let email = this.registerForm.get('email')?.value;
-    let password = this.registerForm.value.password;
+  nextStep(firstStepInfo: { email: string; registered: boolean }) {
+    console.log(firstStepInfo);
 
-    if (this.isRegistered) {
+    this.firstStep = false;
+    this.email = firstStepInfo.email;
+    this.isRegistered = firstStepInfo.registered;
+  }
+  submitData(formData: { password: string; name?: string }) {
+    if (formData.name) {
       this.isLoading = true;
       this.authService
-        .login(email, password)
+        .signUp(this.email, formData.password, formData.name)
         .pipe(take(1))
         .subscribe(
-          () => {
+          (data: any) => {
+            this.dataService.name.next(data.name);
+
+            this.router.navigate(['/my-day']);
             this.isLoading = false;
             this.dataService.fetching.next(false);
-            this.router.navigate(['/my-day']);
           },
           (errorMessage) => {
             this.error = errorMessage;
-            this.dataService.fetching.next(false);
             this.isLoading = false;
+            this.dataService.fetching.next(false);
           }
         );
     } else {
-      if (!this.registerForm.valid) {
-        return;
-      }
       this.isLoading = true;
       this.authService
-        .signUp(email, password, name)
+        .login(this.email, formData.password)
         .pipe(take(1))
         .subscribe(
           () => {
-            this.router.navigate(['/my-day']);
             this.isLoading = false;
-            this.authService.firstVisit.next(true);
             this.dataService.fetching.next(false);
+            this.router.navigate(['/my-day']);
           },
           (errorMessage) => {
             this.error = errorMessage;
-            this.isLoading = false;
             this.dataService.fetching.next(false);
+            this.isLoading = false;
           }
         );
     }
-  }
-  checkEmail() {
-    this.isLoading = true;
-    this.subscription = this.authService
-      .checkEmai(this.registerForm.value.email)
-      .subscribe((message) => {
-        this.isLoading = false;
-        this.firstStep = false;
-        if (message.registered) {
-          this.isRegistered = true;
-        } else {
-          this.isRegistered = false;
-        }
-      });
-
-    this.registerForm.get('email')?.disable();
   }
   resetPassword() {
     this.passwordReset = true;
@@ -125,14 +109,13 @@ export class AuthFormComponent implements OnInit, AfterViewInit {
       data: {
         data: 'auth',
       },
-      panelClass: 'change-task-property-modal',
+      panelClass: 'confirm-delete',
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.firstStep = true;
         this.isRegistered = null as any;
-        this.registerForm.get('email')?.enable();
-        this.registerForm.reset();
+        this.email = '';
         this.error = null as any;
       }
     });
@@ -149,22 +132,5 @@ export class AuthFormComponent implements OnInit, AfterViewInit {
   backToAuth() {
     this.passwordReset = false;
     this.emailSent = false;
-  }
-  counter(n: number): number[] {
-    return Array(n);
-  }
-  customEmailValidator(
-    control: AbstractControl
-  ): { [key: string]: any } | null {
-    const trimmedValue = control.value?.trim();
-
-    if (
-      trimmedValue &&
-      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}$/.test(trimmedValue)
-    ) {
-      return { invalidEmail: true };
-    }
-
-    return null;
   }
 }

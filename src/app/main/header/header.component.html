@@ -1,0 +1,17 @@
+<header>
+  <div class="settings" (click)="profileSettings()">
+    <div
+      class="avatar-frame"
+      [class]="imageUrl ? 'avatar-wrapper' : 'icon-wrapper'"
+    >
+      <img
+        *ngIf="imageUrl"
+        class="avatar"
+        [src]="imageUrl"
+        alt="Profile avatar"
+      />
+      <mat-icon class="icon" *ngIf="!imageUrl">settings</mat-icon>
+    </div>
+    <div class="username">{{ username }}</div>
+  </div>
+</header>

@@ -81,7 +81,7 @@ export class AuthService {
         this.dataService.addAvatar(id, result.user.photoURL!);
         this.http
           .get(
-            'https://portfolio-project-12-default-rtdb.firebaseio.com/users/' +
+            'https://posts-test-task-default-rtdb.europe-west1.firebasedatabase.app/users/' +
               id +
               '.json'
           )
@@ -94,14 +94,13 @@ export class AuthService {
                   .pipe(take(1))
                   .subscribe(() => {
                     this.dataService.fetching.next(false);
-                    this.router.navigate(['/my-day']);
+                    this.router.navigate(['/main']);
                   });
               } else {
                 this.dataService
                   .createUser(id, name!)
                   .pipe(
                     take(1),
-                    tap(() => this.firstVisit.next(true)),
                     exhaustMap(() =>
                       this.dataService.addAvatar(id, result.user.photoURL!)
                     ),
@@ -109,7 +108,8 @@ export class AuthService {
                   )
                   .subscribe((data) => {
                     this.dataService.fetching.next(false);
-                    this.router.navigate(['/my-day']);
+                    this.router.navigate(['/main']);
+                    this.dataService.name.next(name!);
                   });
               }
             },
@@ -118,7 +118,16 @@ export class AuthService {
             }
           );
       })
-      .catch(() => {});
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        console.log(errorCode);
+        alert(errorCode);
+
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        alert(errorMessage);
+      });
   }
   login(email: string, password: string) {
     return this.http
@@ -277,5 +286,11 @@ export class AuthService {
       }
     }
     return throwError(errorMessage);
+  }
+  hasAccess() {
+    if (!!this.user.value) {
+      return true;
+    }
+    return false;
   }
 }

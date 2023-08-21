@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnDestroy,
-} from '@angular/core';
-import { Subscription, debounceTime } from 'rxjs';
-import { DataStorageService } from '../data-storage-service/data-storage.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-fetch-loading',

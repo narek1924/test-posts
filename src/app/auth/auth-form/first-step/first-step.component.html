@@ -1,0 +1,38 @@
+<button class="auth-card google" (click)="googleSignIn()">
+  <div class="google-icon">
+    <img src="/assets/icons/google-icon.svg" alt="" />
+  </div>
+  <div class="google-auth-title">Войти с помощью Google</div>
+</button>
+<form (submit)="checkEmail()" [formGroup]="checkForm">
+  <div class="control">
+    <div
+      class="auth-card input-wrapper"
+      [class.input-invalid]="
+        checkForm.get('email')!.invalid && checkForm.get('email')!.touched
+      "
+    >
+      <input
+        formControlName="email"
+        class="input"
+        placeholder="Введите свой E-mail"
+      />
+
+      <button
+        type="submit"
+        class="check-email-button"
+        [disabled]="checkForm.get('email')!.invalid"
+      >
+        <mat-icon class="icon" *ngIf="!isLoading">arrow_forward</mat-icon>
+        <app-loading-spinner-small
+          *ngIf="isLoading"
+        ></app-loading-spinner-small>
+      </button>
+    </div>
+    <span
+      *ngIf="checkForm.get('email')!.invalid && checkForm.get('email')!.touched"
+      class="error"
+      >{{ checkForm.get("email")!.errors!["message"] }}</span
+    >
+  </div>
+</form>

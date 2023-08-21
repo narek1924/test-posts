@@ -1,21 +1,18 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription, take } from 'rxjs';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-import { AppState } from 'src/app/shared/app-state/reducers';
 import { AuthService } from '../auth.service';
 
 import {
   firstStepAnimation,
   nextStepAnimation,
 } from 'src/app/shared/animations';
-import { CreateListModalComponent } from 'src/app/side-bar/create-list-modal/create-list-modal.component';
-import { TasksStateService } from 'src/app/shared/app-state/tasks-state.service';
 import { imagesRef, storage } from 'src/app/firebase-config';
 import { DataStorageService } from 'src/app/shared/data-storage-service/data-storage.service';
 import { ErrorModalComponent } from 'src/app/shared/UI/error-modal/error-modal.component';
+import { ConfirmDeleteComponent } from 'src/app/shared/UI/confirm-delete/confirm-delete.component';
 
 @Component({
   selector: 'app-profile-settings',
@@ -37,18 +34,11 @@ export class ProfileSettingsComponent
   imageUrl!: string;
   imageLoading = false;
   constructor(
-    private store: Store<AppState>,
     private authService: AuthService,
     private matDialog: MatDialog,
-    private tasksService: TasksStateService,
     private dataStorageService: DataStorageService
   ) {}
   ngOnInit(): void {
-    this.subscription.add(
-      this.store
-        .select('appState')
-        .subscribe((data) => (this.username = data.name))
-    );
     this.subscription.add(
       this.authService.user.subscribe((data) => {
         this.userEmail = data.email;
@@ -59,26 +49,14 @@ export class ProfileSettingsComponent
         (url) => (this.imageUrl = url)
       )
     );
+    this.subscription.add(
+      this.dataStorageService.name.subscribe((name) => (this.username = name))
+    );
   }
   ngAfterViewInit(): void {
     this.animationDisabled = false;
   }
-  editUsername() {
-    let matDialogRef = this.matDialog.open(CreateListModalComponent, {
-      panelClass: 'add-list-modal',
-      data: {
-        data: this.username,
-      },
-    });
-    matDialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        let name = data.charAt(0).toUpperCase() + data.slice(1);
-        this.tasksService.changeName(name);
-      }
-    });
-  }
   logout() {
-    this.tasksService.resetTasks();
     this.authService.logout();
   }
   onDelete() {
@@ -88,7 +66,19 @@ export class ProfileSettingsComponent
     this.changePassword = true;
   }
   deleteAccount() {
-    this.authService.deleteAccount();
+    this.matDialog
+      .open(ConfirmDeleteComponent, {
+        data: {
+          data: 'deleteAccount',
+        },
+        panelClass: 'confirm-delete',
+      })
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          this.authService.deleteAccount();
+        }
+      });
   }
   resetPassword() {
     this.sendingEmail = true;
@@ -124,14 +114,14 @@ export class ProfileSettingsComponent
                 });
               }
             );
-
-            // Or inserted into an <img> element
           })
           .catch((error) => {
-            // Handle any errors
+            console.error(error);
           });
       });
     });
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }

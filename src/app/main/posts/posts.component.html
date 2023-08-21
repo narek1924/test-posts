@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="posts">
+    <ng-container *ngIf="loading">
+      <mat-card class="post__card" *ngFor="let item of counter(5)">
+        <mat-card-content>
+          <app-content-loading />
+          <br />
+          <app-content-loading />
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+    <ng-container *ngIf="!loading">
+      <mat-card
+        class="post__card"
+        *ngFor="let post of pageSlice"
+        (click)="showPost(post.id)"
+      >
+        <mat-card-header>
+          <mat-card-title>{{ post.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ post.body }}</p>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+    <mat-paginator
+      [length]="100"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>

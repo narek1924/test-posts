@@ -1,0 +1,11 @@
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80%;
+  max-width: 500px;
+  margin: 10px auto 0;
+}
+.post__card {
+  cursor: pointer;
+}

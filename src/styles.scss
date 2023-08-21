@@ -1,0 +1,33 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  scrollbar-width: thin;
+}
+.profile-settings-modal {
+  position: fixed !important;
+  top: 70px;
+  left: 10px;
+  max-width: 400px;
+  width: 400px;
+  height: fit-content;
+  padding: 0;
+  border-radius: 15px;
+}
+.error-modal .mat-dialog-container {
+  height: fit-content;
+  width: fit-content;
+  border-radius: 15px;
+}
+.confirm-delete .mat-dialog-container {
+  width: 400px;
+  padding: 0;
+  border-radius: 12px;
+}

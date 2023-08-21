@@ -6,36 +6,49 @@ import { ErrorModalComponent } from '../UI/error-modal/error-modal.component';
 
 export interface userData {
   name: string;
-  tasks: Task[];
-  lists: string[];
-  imageUrl: string;
+  imageUrl?: string;
 }
-
+export interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class DataStorageService {
+  postLoading = new BehaviorSubject<boolean>(false);
   fetching = new BehaviorSubject(true);
-  profileImage = new BehaviorSubject<string>(null as any);
+  profileImage = new BehaviorSubject<string>('');
+  name = new BehaviorSubject<string>('');
   constructor(private http: HttpClient, private matDialog: MatDialog) {}
 
+  fetchPosts() {
+    this.postLoading.next(true);
+    return this.http.get<Post[]>('https://jsonplaceholder.typicode.com/posts');
+  }
+  fetchPost(id: number) {
+    this.postLoading.next(true);
+    return this.http.get<Post>(
+      'https://jsonplaceholder.typicode.com/posts/' + id
+    );
+  }
   createUser(id: string, name: string) {
     this.fetching.next(true);
     let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
     return this.http.put(
-      'https://portfolio-project-12-default-rtdb.firebaseio.com/users/' +
+      'https://posts-test-task-default-rtdb.europe-west1.firebasedatabase.app//users/' +
         id +
         '.json',
       {
         name: capitalizedName,
-        tasks: [],
-        lists: ['Personal', 'Grocery list', 'Work'],
       }
     );
   }
   deleteUser(id: string) {
     return this.http.delete(
-      'https://portfolio-project-12-default-rtdb.firebaseio.com/users/' +
+      'https://posts-test-task-default-rtdb.europe-west1.firebasedatabase.app/users/' +
         id +
         '.json'
     );
@@ -44,12 +57,13 @@ export class DataStorageService {
     this.fetching.next(true);
     return this.http
       .get<userData>(
-        'https://portfolio-project-12-default-rtdb.firebaseio.com/users/' +
+        'https://posts-test-task-default-rtdb.europe-west1.firebasedatabase.app/users/' +
           id +
           '.json'
       )
       .pipe(
         tap((data) => {
+          this.name.next(data.name);
           if (data.imageUrl) {
             this.profileImage.next(data.imageUrl);
           }
@@ -59,7 +73,7 @@ export class DataStorageService {
   addAvatar(id: string, url: string) {
     this.profileImage.next(url);
     return this.http.patch(
-      'https://portfolio-project-12-default-rtdb.firebaseio.com/users/' +
+      'https://posts-test-task-default-rtdb.europe-west1.firebasedatabase.app//users/' +
         id +
         '.json',
       {
