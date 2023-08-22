@@ -1,10 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { take, Subscription } from 'rxjs';
@@ -26,32 +21,19 @@ import { ConfirmDeleteComponent } from 'src/app/shared/UI/confirm-delete/confirm
 })
 export class AuthFormComponent implements OnInit, AfterViewInit {
   email!: string;
-  showPassword = false;
-  subscription!: Subscription;
   animationDisabled = true;
-  registerForm!: FormGroup;
   isRegistered!: boolean;
   firstStep = true;
   passwordReset = false;
   isLoading = false;
-  emailSent = false;
-  sendingEmail = false;
   error: string = null as any;
   constructor(
-    private fb: FormBuilder,
     private matDialog: MatDialog,
     private authService: AuthService,
     private router: Router,
     private dataService: DataStorageService
   ) {}
-  ngOnInit(): void {
-    // this.registerForm = this.fb.group({
-    //   email: ['', [Validators.required, this.customEmailValidator]],
-    //   name: ['', [Validators.required]],
-    //   password: ['', [Validators.required, Validators.minLength(6)]],
-    //   confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
-    // });
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.animationDisabled = false;
   }
@@ -120,17 +102,7 @@ export class AuthFormComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  sendResetEmail() {
-    this.sendingEmail = true;
-    this.authService
-      .sendResetEmail(this.registerForm.get('email')?.value)
-      .subscribe((data) => {
-        this.sendingEmail = false;
-        this.emailSent = true;
-      });
-  }
   backToAuth() {
     this.passwordReset = false;
-    this.emailSent = false;
   }
 }

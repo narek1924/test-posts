@@ -82,7 +82,7 @@
       <p>Инструкции по восстановлению пароля будут отправлены на эту почту:</p>
       <p style="font-weight: 600">{{ userEmail }}</p>
       <button *ngIf="!emailSent" class="button reset" (click)="resetPassword()">
-        <p *ngIf="!sendingEmail">Reset Password</p>
+        <p *ngIf="!sendingEmail">Сбросить пароль</p>
         <app-loading-spinner-small
           *ngIf="sendingEmail"
         ></app-loading-spinner-small>
